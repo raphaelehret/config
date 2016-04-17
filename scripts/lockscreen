@@ -1,0 +1,11 @@
+#!/bin/bash
+
+WP_DIR=/home/hamtarowarrior/Pictures/png-wpp
+
+images=()
+while IFS= read -r -d $'\0'; do    
+    images+=("$REPLY")
+done < <(find "$WP_DIR" -type f -print0)
+length=${#images[@]}
+num=$((( $RANDOM % ($length) ) + 1)) 
+i3lock -i "${images[$num]}"

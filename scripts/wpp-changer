@@ -1,0 +1,8 @@
+#!/bin/bash
+
+WP_DIR=/home/hamtarowarrior/Pictures/png-wpp
+
+while [ 1 ]; do
+    feh -r --bg-scale --randomize ~/Pictures/png-wpp/*
+    sleep 15
+done

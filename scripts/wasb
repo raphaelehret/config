@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# brief :
+# This script is aimed at deleting usual bullshit added in file names. 
+# Most of those are added by Windows users who don't have a clue of the
+# struggle of typing in a command-line interface. Therefore the name
+# of this script is wasb : Windows Accents and Spaces are Bullshit.
+
+# Usage : wasb {foldername}
+
+# Note that this script does move through the whole arborescence of this folder.
+# There is no one-folder-wide version of this script already, I'll make one. Eventually. Maybe.
+
+MY_PATH=$1
+
+replace_all(){
+    name=$1
+    new_name="$(echo $name | sed 's/[éèêë]/e/g' | sed 's/ /_/g' | sed 's/[âäà]/a/g' | sed 's/[ûüù]/u/g')" 
+}
+
+
+## Selecting all the arborescence via the `find` command
+files=()
+while IFS=  read -r -d $'\0'; do
+    files+=("$REPLY")
+done < <(find "$MY_PATH" -print0)
+
+
+## Reversing the array
+## This is absolutely necessary 
+rfiles=()
+for (( idx=${#files[@]}-1 ; idx >= 0 ; idx-- )); do
+    rfiles+=("${files[$idx]}")
+done
+
+for f in "${rfiles[@]}"; do
+    name="$(basename "$f")"
+    directory="$(dirname "$f")"
+
+    replace_all "$name"
+
+    [[ ! "$name" == "$new_name" ]] && 
+        echo "Moving "$f" into $directory/$new_name" && 
+        mv "$directory"/"$name" "$directory/$new_name"
+done
+
+

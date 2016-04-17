@@ -1,0 +1,16 @@
+#!/bin/python
+
+# The goal of this script is to display the content of the daily quest
+# of the game Dofus (http://www.dofus.com)
+# You can download the json file at http://almanax.zone-bouffe.com/dev.php
+# More there (in french) : http://forum.dofus.com/fr/1105-creations-joueurs/1772392-developpeurs-almanax-json
+
+import json
+import time
+
+with open('/home/hamtarowarrior/Downloads/almanax.json') as data_file:
+    data = json.load(data_file)
+
+day_data = data["dofus"][time.strftime("%m-%d")]
+
+print("L'offrande du jour est : ", day_data["offering"], "\nLe bonus du jour est : ", day_data["bonusDescription"])

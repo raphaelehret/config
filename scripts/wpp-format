@@ -1,0 +1,113 @@
+#!/bin/zsh
+
+TO_CONVERT_PATH=$HOME/Pictures/pending-wpp
+PNG_PATH=$HOME/Pictures/png-wpp
+
+NONE='\033[00m'
+GREEN='\033[01;32m'
+RED='\033[01;31m'
+
+COMPTEUR=0
+
+function colorecho {
+    if [ -z $2 ]; then
+        echo -e ${GREEN}"$1"${NONE}
+    else
+        echo -e ${2}"$1"${NONE}
+    fi
+}
+
+## Selecting all the folders
+folders=()
+while IFS=  read -r -d $'\0'; do
+    folders+=("$REPLY")
+done < <(find "$TO_CONVERT_PATH" -mindepth 1 -type d -print0)
+
+## Sorting the folders (Yeah, this sucks
+folders=( $(
+for f in "${folders[@]}"; do
+    echo "$f"
+done | sort) )
+
+## Going through every folder
+for folder in "${folders[@]}"; do
+    f="$(basename "$folder")"
+    colorecho "Now entering $f" "${RED}"
+    
+    ## Taking image names
+    images=()
+    while IFS=  read -r -d $'\0'; do
+        images+=("$REPLY")
+    done < <(find "$TO_CONVERT_PATH/$f" -maxdepth 1 -type f -name "*.jpg" -print0)
+
+    ## Converting every image to png for this folder 
+    for i in "${images[@]}"; do
+        if [ ! -z $i ]; then
+            n="$(basename $i)"
+            echo "Formating $n"
+            mogrify -format png "$i" &> /dev/null && 
+                {rm "$i"} || 
+                {colorecho "Error while processing $i" $RED}
+        fi
+    done
+
+    colorecho "Formating done"
+
+    ## Create the folder if it does not exists
+    [[ ! -d "$PNG_PATH/$f" ]] && mkdir "$PNG_PATH/$f"
+
+    ## Stocking all the png images
+    images=()
+    while IFS=  read -r -d $'\0'; do
+        images+=("$REPLY")
+    done < <(find "$TO_CONVERT_PATH/$f" -maxdepth 1 -type f -name "*.png" -print0)
+   
+    colorecho "Moving Files"
+    ## Moving every image
+    for i in "${images[@]}"; do
+
+        COMPTEUR=$((COMPTEUR+1))
+
+        [[ -z $i ]] && break
+        name="$(basename $i)"
+
+        echo "Moving $name"
+
+        ## If there is already a picture named this way in the destination folder, switch cases
+        if [ -e "$PNG_PATH/$f/$name" ]; then
+            colorecho "$f/$name existe deja"
+            colorecho "Que voulez vous faire"
+
+            select opt in "Remplacer" "Renommer" "Supprimer"; do
+                case $opt in
+                    "Remplacer")
+                        mv "$i" "$PNG_PATH/$f/."
+                        ;;
+
+                    "Renommer")
+                        TMP=$(mktemp)
+                        name=$(basename $TMP)
+                        echo $name
+                        mv "$i" "$PNG_PATH/$f/$name.png"
+                        ;;
+
+                    "Supprimmer")
+                        rm "$i"
+                        ;;
+                esac
+                break
+            done
+        else
+            mv "$i" "$PNG_PATH/$f/."
+        fi
+    done
+    colorecho "Moving done for this folder\n"
+done
+
+NB="$(find "$PNG_PATH" -type f | wc -l)"
+colorecho "$COMPTEUR picture(s) moved!"
+colorecho "You have now $NB wallpapers!" "${RED}"
+
+
+
+
