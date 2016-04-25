@@ -122,18 +122,10 @@ function spoofit (){
     sudo ip link set dev wlp2s0 up
 }
 
-## Change map to US if FR and FR if US
-function keymap(){
-MAP="$(setxkbmap -query | grep layout | awk '{ print $2 }')"
-if [ $MAP = 'us' ]; then 
-    setxkbmap fr
-else
-    setxkbmap us
-fi
-}
 
 ############# ENABLING #############
 
 # Display a fortune-like message related to dofus (www.dofus.com)
+# https://github.com/raphaelehret/config/blob/master/scripts/almanax
 ~/bin/almanax
 

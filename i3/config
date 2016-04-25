@@ -243,12 +243,14 @@ bindsym Mod4+d exec dmenu_run
 bindsym Mod4+u exec "keymap"
 
 # These bindings are used to open some user apps
+# Here, inscreen is a command I made to launch the app in a screen
+# rather than launching it "blindly"
 mode "apps" {
-    bindsym c exec google-chrome-stable
-    bindsym d exec dofus
-    bindsym w exec "wicd-client -n"
-    bindsym m exec minecraft
-    bindsym t exec teamspeak3
+    bindsym c exec "inscreen google-chrome-stable &"
+    bindsym d exec "inscreen dofus"
+    bindsym w exec "inscreen wicd-client -n"
+    bindsym m exec "inscreen minecraft"
+    bindsym t exec "inscreen teamspeak3"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
