@@ -15,5 +15,5 @@ FILE=$TMP/$NAME
 LINKFILE=$TMP/links
 
 # Path to the folder where the images are saved (KEEP option)
-SAVEFOLDER=~/Images/screens
+SAVEFOLDER=~/Pictures/screens
 SAVEPATH=$SAVEFOLDER/$NAME

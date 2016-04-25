@@ -3,11 +3,17 @@
 ### The options are the same as gnome-screenshots
 
 # Installation path
-INSTALL=/home/HamtaroWarrior/src/mypuush/
+INSTALL=/home/hamtarowarrior/src/mypuush/
 
 cd $INSTALL
 
 source $INSTALL/config
+
+function notif(){
+i3-nagbar -t "$1" -m "$2" &
+sleep 5
+[[ $1 = warning ]] && killall -9 i3-nagbar
+}
 
 for arg in $@; do
     if [ $arg = '-f' ]; then
@@ -28,14 +34,14 @@ echo 'Taking screenshot'
 gnome-screenshot $ARGS -f $FILE
 
 if [ ! -e $FILE ]; then
-    echo `python notify.py nofile`
+    notif "error" "MyPuush : Could not find the screenshot file" &
     exit -1
 else
     echo 'Done!'
 fi
 
 echo 'Uploading image'
-LINK=`python mypuush.py $FILE $NAME`
+LINK="$(python mypuush.py $FILE $NAME)"
 
 if [ $KEEP = true ]; then
     if [ ! -e $SAVEFOLDER ]; then
@@ -48,18 +54,18 @@ rm $FILE
 
 
 if [ -z "$LINK" ]; then
-    echo `python notify.py empty`
+    notif "error" "MyPuush : Couldn't not find the link" &
     exit 5
 elif [ $LINK = 1 ]; then
-    echo `python notify.py noclient`
+    notif "error" "MyPuush : Couldn't connect to Imgur's API" &
     exit 1
 elif [ $LINK = 2 ]; then
-    echo `python notify.py uploadfail`
+    notif "error" "MyPuush : The upload failed" &
     exit 2
 else
     echo 'Done!'
     echo "$NAME : $LINK" >> $LINKFILE
-    echo `python notify.py success $LINK`
+    notif "warning" "MyPuush : Your link is inclip at the address : '$LINK'" &
     { hash xclip > /dev/null && echo $LINK | xclip -sel clip && echo "Your link has also been clipboarded!"; } || { echo "If you want to your link clipboarded, install xclip"; } 
     exit 0
 fi

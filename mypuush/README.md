@@ -17,8 +17,6 @@ uploads your screenshots to Imgur and clipboards its link.
 
 ## Usage :
 
-Launch mypuush.sh like a normal script.
-
 The input arguments are the same as for `gnome-screenshot`
 
 There is also the -k option to keep this screenshot even if the config variable is set as false
