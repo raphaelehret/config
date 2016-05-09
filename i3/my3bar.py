@@ -24,8 +24,15 @@ def battery(field):
                 charge_now = int(value)
     if status == "Full":
         field["full_text"] = status + " battery"
+    elif status == "Unknown":
+        field["full_text"] = "Changing status"
     else:
-        field["full_text"] = status + ": " + str(int(charge_now / charge_full) * 100) + "%"
+        charge = int(charge_now / charge_full * 100)
+        if charge < 10:
+            field["background"] = "#FF0000"
+            field["color"] = "#FFFFFF"
+        field["full_text"] = status + ": " + str(charge) + "%"
+    field["button"] = 1
 
 
 def brightness():
@@ -47,10 +54,10 @@ def get_json(parsed):
                 continue
         except subprocess.CalledProcessError:
                 continue
-    end = []
-    end += parsed
-    end += brightness()
-    return end
+    res = []
+    res += parsed
+    res += brightness()
+    return res
 
 
 def main():
