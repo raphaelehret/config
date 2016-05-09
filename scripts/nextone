@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Switch to the next instance of an array of windows (based on the window
+#                                                          name)
+
+NAMES=("Saphirell" "Bakkabakka" "Dofus")
+CURRENT="$(xdotool getactivewindow)"
+INSTANCES=()
+i=0
+isNextOne=0
+nbIt=0
+
+# Selects only the existing (only once) windows
+for NAME in ${NAMES[@]}; do
+    PID="$(xdotool search --name $NAME)"
+    SPACES="$(echo $PID | grep ' ' | wc -l)"
+    if [ ! -z $PID ] && [ $SPACES -eq 0 ]; then
+        INSTANCES[$i]=$PID
+        i=$i+1
+    fi
+done
+
+i=0
+
+NB_INSTANCES=${#INSTANCES[@]}
+
+if [ $NB_INSTANCES -eq 0 ]; then
+    echo "No instance of your program was found"
+    exit
+elif [ $NB_INSTANCES -eq 1 ] ; then
+    echo "Only one active instance of your program was found"
+    xdotool windowactive ${INSTANCES[0]};
+else
+    while [ $isNextOne -ne 2 ]; do
+        # If there is too much iterations, take a random window to show
+        if [ $nbIt -eq 10 ]; then
+            isNextOne=1;
+        fi
+        nbIt=$(( nbIt+1 ))
+        if [ $isNextOne -eq 1 ]; then
+            xdotool windowactivate ${INSTANCES[$i]};
+            isNextOne=2;
+        else
+            if [ ${INSTANCES[$i]} -eq $CURRENT ]; then
+                isNextOne=1;
+            fi
+            i=$(( (i+1)%(NB_INSTANCES) ));
+        fi
+    done
+fi
+
+

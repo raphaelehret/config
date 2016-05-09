@@ -5,15 +5,16 @@
 ### Mail : ehretrapha[at]eisti[dot]eu
 ### Langage : python 3
 ### Type : script
-###
+### 
 ### Description : open reverse engines in a browser to reverse search a given link
 ###                 or file. By default, the browser is your default browser. The
 ###                 url of the engines are specified in a file on the path
 ###                 stocked in `urlfile`.
 ###                 If it is invalid, google reverse search will be open by default
-###
+###                 
+### 
 ### Required :
-###
+### 
 ### Arguments :
 ###     [-f filename]: read urls in a file rather than an url
 
