@@ -13,7 +13,7 @@
 
 ##############################################
 ####                                      ####
-####               FONTS                  ####
+####               MISC                   ####
 ####                                      ####
 ##############################################
 
@@ -272,3 +272,17 @@ mode "screenshot" {
 }
 
 bindsym Mod4+y mode "screenshot"
+
+mode "multi-account" {
+    bindsym --whole-window button1 exec "multiclicker click 1"
+    bindsym --whole-window button3 exec "multiclicker click 3"
+    bindsym Tab exec "nextone"
+
+    bindsym --whole-window Mod4+button1 mode "default"
+    bindsym --whole-window Mod4+button3 mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym --whole-window Mod4+button1 mode "multi-account"
+bindsym --whole-window Mod4+button3 mode "multi-account"
