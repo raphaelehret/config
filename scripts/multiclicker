@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# The purpose of this script is to manage multi account playing (on Dofus).
+# For every window named on the `NAMES` array, if a click is perfomed on a
+# window, it is done on every window
+
+# This script is intended to be used with i3 (or any system that allows you
+# to handle yourself your mouse buttons
+
+# For more, see my i3 config at
+# https://github.com/raphaelehret/config/blob/master/i3/config
+
 ACTION=$1
 NUMBER=$2
 
