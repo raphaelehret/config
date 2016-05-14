@@ -14,14 +14,33 @@ ACTION=$1
 NUMBER=$2
 
 CURRENT="$(xdotool getactivewindow)"
-NAMES=("Saphirell" "Bakkabakka" "Dofus")
+CURRENT_NAME="$(xdotool getactivewindow getwindowname)"
+NAMES=("Saphirell" "Bakkabakka" "Negeko" "Ikaros-Alpha")
+
+isInArray=0
+
+for e in "${NAMES[@]}"; do
+    [[ "$e"="$NAMES" ]] && isInArray=1
+done
+
+if [[ "$isInArray" -eq 0 ]]; then
+    xdotool click 1;
+    exit;
+fi
+#[[ "$isInArray" -eq 0 ]] && xdotool click 1 && exit;
+
+PID="$(xdotool search --name "$CURRENT_NAME")"
+xdotool click --window $PID $NUMBER
+sleep 0.1
 
 for NAME in "${NAMES[@]}"; do
-    PID="$(xdotool search --NAME "$name")"
-    echo $PID
-    if [ ! -z $PID ]; then
-        xdotool windowactivate $PID
-        xdotool "$ACTION" --window "$PID" "$NUMBER"
+    if [ "$NAME"!="$CURRENT_NAME" ]; then
+        PID="$(xdotool search --name "$NAME")"
+        if [ ! -z $PID ]; then
+            xdotool windowactivate $PID
+            xdotool click --window $PID $NUMBER
+            sleep 0.1
+        fi
     fi
 done
 

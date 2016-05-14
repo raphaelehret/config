@@ -3,7 +3,7 @@
 # Switch to the next instance of an array of windows (based on the window
 #                                                          name)
 
-NAMES=("Saphirell" "Bakkabakka" "Dofus")
+NAMES=("Saphirell" "Bakkabakka" "Negeko"  "Ikaros-Alpha")
 CURRENT="$(xdotool getactivewindow)"
 INSTANCES=()
 i=0

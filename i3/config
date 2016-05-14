@@ -221,10 +221,10 @@ bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
 
 # Media player controls
 # I do not know if this work
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
+#bindsym XF86AudioPlay exec playerctl play
+#bindsym XF86AudioPause exec playerctl pause
+#bindsym XF86AudioNext exec playerctl next
+#bindsym XF86AudioPrev exec playerctl previous
 
 
 ##############################################
@@ -273,6 +273,16 @@ mode "screenshot" {
 
 bindsym Mod4+y mode "screenshot"
 
+mode "multi-account-no-click" {
+    bindsym Tab exec "nextone"
+
+    bindsym --whole-window Mod4+button1 mode "default"
+    bindsym --whole-window Mod4+button3 mode "default"
+    bindsym Mod4+Tab mode "default"
+}
+
+bindsym Mod4+Tab mode "multi-account-no-click"
+
 mode "multi-account" {
     bindsym --whole-window button1 exec "multiclicker click 1"
     bindsym --whole-window button3 exec "multiclicker click 3"
@@ -280,8 +290,6 @@ mode "multi-account" {
 
     bindsym --whole-window Mod4+button1 mode "default"
     bindsym --whole-window Mod4+button3 mode "default"
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
 }
 
 bindsym --whole-window Mod4+button1 mode "multi-account"
