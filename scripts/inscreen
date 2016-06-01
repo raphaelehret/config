@@ -10,6 +10,7 @@ MAIN=$1
 # Uncomment the following line and delete the next one if you want
 # to delete the screen if it exists before creating a new one
 # screen -ls | grep "$MAIN" && screen -X -S "$MAIN" quit; screen -dmS $MAIN sh
-screen -ls | grep "$MAIN" || screen -dmS $MAIN sh
-screen -S $MAIN -X stuff "$COMMAND
+screen -ls | grep "$MAIN" || screen -dmS "$MAIN" sh;
+sleep 0.01
+screen -S "$MAIN" -X stuff "$COMMAND
 "
