@@ -1,7 +1,13 @@
 #!/bin/zsh
 
-TO_CONVERT_PATH=$HOME/Pictures/pending-wpp
-PNG_PATH=$HOME/Pictures/png-wpp
+TO_CONVERT_PATH=/mnt/d/Data/Images/pending-wpp
+PNG_PATH=/mnt/d/Data/Images/png-wpp
+
+[[ ! -e "$TO_CONVERT_PATH" ]] && echo "Le dossier $TO_CONVERT_PATH n'existe pas, impossible de convertir des wpp" && exit 1
+
+[[ ! -e "$PNG_PATH" ]] && mkdir "$PNG_PATH"  && 
+	echo "Dossier de destination créé" || 
+	( echo "Echec lors de la création du dossier de destination" && exit 1) 
 
 NONE='\033[00m'
 GREEN='\033[01;32m'
@@ -10,11 +16,7 @@ RED='\033[01;31m'
 COMPTEUR=0
 
 function colorecho {
-    if [ -z $2 ]; then
-        echo -e ${GREEN}"$1"${NONE}
-    else
-        echo -e ${2}"$1"${NONE}
-    fi
+    [[ -z $2 ]] && echo -e ${GREEN}"$1"${NONE} || echo -e ${2}"$1"${NONE}
 }
 
 ## Selecting all the folders
