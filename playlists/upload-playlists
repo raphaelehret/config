@@ -49,7 +49,7 @@ class UploadManager():
         for f in folder_list:
             music_list = glob.glob(f + "/*." + FILETYPE)
             folder_name = f.split('/')[-1]
-            uploaded_songs_id = list(self.mm.upload(music_list)[0].values())
+            uploaded_songs_id = self.mm.upload(music_list)
 
             #playlists_list = self.mc.get_all_playlists()
 
