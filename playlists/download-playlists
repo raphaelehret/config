@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Options : 
+
+# Root directory
+
+ARCHIVE_FILE=".archive.txt"
+
+URL_FILE="${HOME}/Music/playlists.txt"
+
+LOG_FILE=".download-playlist.log"
+
+RATE="2M"
+
+
+usage (){
+	exec 2>&1
+
+	echo 
+	echo 'Usage :'
+	echo "$0 [options] FOLDER"
+	echo "$0 [options] -u URL [-n PLAYLIST_NAME, --name=PLAYLIST_NAME] FOLDER"
+	echo 
+	echo "OPTIONS"
+	echo "  -v, --verbose       Verbose output"
+	echo "  --no-progress       Output a progress bar while downloading"
+	echo "  --log               Sends everything to log file"         
+	echo "  -h, --help          Prints this help"
+
+	exit 1
+}
+
+
+args=()
+URL=''
+LOGGING=false
+
+INPUT_ARGS="$(getopt --name $0 --options u:vpn:h --longoptions help,url:,log,verbose,name:,no-progress -- $@)"
+
+
+eval set -- "$INPUT_ARGS"
+
+while [ "$1" != "--" ]; do
+	case "$1" in
+		-v | --verbose)      args+=("-v");;
+		--no-progress )      args+=("--no-progress");;
+		-u | --url    )      URL="$2"; shift;;
+		-n | --name   )      NAME="$2"; shift;;
+		--log         )      LOGGING=true;;
+		*             )      usage;;
+	esac
+
+	shift
+done
+
+shift
+
+ROOT="$1"
+
+
+download_playlist () {
+	local URL="$1"
+	shift
+	local args="$@"
+
+	youtube-dl ${args[@]} -- "$URL" || true
+}
+
+download_single_playlist () {
+	local NAME="$1"
+	shift
+	local args="$@"
+
+	if [ -z "$NAME" ]; then
+		NAME="%(playlist)s"
+	fi
+	if [ ! -e "$ROOT/$NAME" ]; then
+		mkdir "$ROOT/$NAME"
+	elif [ ! -d "$ROOT/$NAME" ]; then
+		echo "Could not create directory $NAME, file exists"
+		exit 1
+	fi
+
+	args+=("--output" "$ROOT/$NAME/%(title)s.%(ext)s")
+	args+=("--download-archive" "$ROOT/$NAME/${ARCHIVE_FILE}")
+
+	download_playlist "$URL" "${args[@]}"
+	exit 0
+}
+
+download_multiple_playlists () {
+	local args="$@"
+
+	while read line; do
+		echo
+		echo === $line ===
+
+		local NAME="$(echo $line | awk '{print $1}')"
+		local URL="$(echo $line | awk '{print $2}')"
+		if [ -z "$NAME" -o -z "$URL" ]; then
+			echo 'The following line is incorrect :'
+			echo "$line"
+			exit 1
+		fi
+
+		if [ ! -e "$ROOT/$NAME" ]; then
+			mkdir "$ROOT/$NAME"
+		elif [ ! -d "$ROOT/$NAME" ]; then
+			echo "Could not create directory $NAME, file exists"
+			exit 1
+		fi
+
+		local args2=()
+		args2="${args[@]}"
+		args2+=("--output" "$ROOT/$NAME/%(title)s.%(ext)s")
+		args2+=("--download-archive" "$ROOT/$NAME/${ARCHIVE_FILE}")
+
+		download_playlist "$URL" "${args2[@]}" 
+
+	done < "$URL_FILE"
+
+	exit 0
+}
+
+if [ -z "${ROOT}" ]; then
+	usage
+else
+	if [ ! -e "${ROOT}" ]; then
+		if ! mkdir -p "${ROOT}"; then
+			echo "Could not create Root folder ${ROOT}, exit with status code 1" 
+			exit 1
+		fi
+	fi
+fi
+
+if [ "$LOGGING" = "true" ]; then
+	exec 1> "$ROOT/$LOG_FILE"; exec 2>&1
+fi
+
+if ! which youtube-dl > /dev/null 2>&1 || ! which ffmpeg > /dev/null 2>&1; then
+	echo "Please install youtube-dl and ffmpeg before running this script"
+	exit 1
+fi
+
+
+if [ ! -s "${URL_FILE}" -a -z "$URL" ]; then
+	echo "URL file empty or non-existant, exit with status code 1" 
+	exit 1
+fi
+
+args+=("--ignore-config"
+	"--ignore-errors"
+        "--yes-playlist"
+	"--rate" "${RATE}"
+	"--restrict-filenames"
+	"--continue"
+	"--no-call-home"
+	"--extract-audio"
+	"--audio-format" "mp3")
+
+if [ ! -z "$URL" ]; then
+	download_single_playlist "$NAME" "${args[@]}"
+else
+	download_multiple_playlists "${args[@]}"
+fi
