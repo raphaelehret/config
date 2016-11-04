@@ -26,9 +26,8 @@ class UploadManager():
         self.root_folder = folder
 
         self.mmlogin()
-        #self.mclogin()
 
-    def mmlogin():
+    def mmlogin(self):
         if not self.mm.login():
             try:
                 self.credentials = self.mm.perform_oauth()
