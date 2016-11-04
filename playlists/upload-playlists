@@ -2,6 +2,7 @@
 
 try:
     from gmusicapi import Musicmanager
+    from gmusicapi import Mobileclient
 except ImportError:
     sys.exit("Please download the gmusicapi with the command : `pip install --user gmusicapi`")
 
@@ -20,8 +21,14 @@ FILETYPE="mp3"
 
 class UploadManager():
     def __init__(self, folder):
-        self.mm = Musicmanager(debug_logging=False)
+        self.mm = Musicmanager()
+        self.mc = Mobileclient()
         self.root_folder = folder
+
+        self.mmlogin()
+        #self.mclogin()
+
+    def mmlogin():
         if not self.mm.login():
             try:
                 self.credentials = self.mm.perform_oauth()
@@ -34,11 +41,27 @@ class UploadManager():
         else:
             print("Logged in!")
 
+    #def mclogin():
+        #read credentials from a  file
+        #check if login successful
+
     def upload_playlists(self):
         folder_list = [ f[0] for f in os.walk(self.root_folder) ]
         for f in folder_list:
             music_list = glob.glob(f + "/*." + FILETYPE)
-            res = self.mm.upload(music_list)
+            folder_name = f.split('/')[-1]
+            uploaded_songs_id = list(self.mm.upload(music_list)[0].values())
+
+            #playlists_list = self.mc.get_all_playlists()
+
+            #for playlist in playlists_list:
+            #    if playlist['name'] == folder_name:
+            #        self.playlist_id = playlist['id']
+            #else:
+            #    self.playlist_id = self.mc.create_playlist(folder_name)
+
+            #self.mc.add_songs_to_playlist(playlist_id, uploaded_songs_id)
+
 
     
 if __name__ == '__main__':
