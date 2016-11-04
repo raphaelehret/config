@@ -12,8 +12,6 @@ URL_FILE="${HOME}/Music/playlists.txt"
 
 LOG_FILE=".download-playlist.log"
 
-RATE="2M"
-
 
 usage (){
 	exec 2>&1
@@ -62,20 +60,10 @@ ROOT="$1"
 
 download_playlist () {
 	local URL="$1"
-	shift
+	local NAME="$2"
+	shift 2
 	local args="$@"
 
-	youtube-dl ${args[@]} -- "$URL" || true
-}
-
-download_single_playlist () {
-	local NAME="$1"
-	shift
-	local args="$@"
-
-	if [ -z "$NAME" ]; then
-		NAME="%(playlist)s"
-	fi
 	if [ ! -e "$ROOT/$NAME" ]; then
 		mkdir "$ROOT/$NAME"
 	elif [ ! -d "$ROOT/$NAME" ]; then
@@ -86,7 +74,21 @@ download_single_playlist () {
 	args+=("--output" "$ROOT/$NAME/%(title)s.%(ext)s")
 	args+=("--download-archive" "$ROOT/$NAME/${ARCHIVE_FILE}")
 
-	download_playlist "$URL" "${args[@]}"
+	youtube-dl ${args[@]} --exec "ffmpeg -i {} -metadata artist=\"$NAME\"\
+	       	-metatdata album=\"$NAME\" {}.tmp.mp3; mv {}.tmp.mp3 {}" -- "$URL" || true
+}
+
+download_single_playlist () {
+	local NAME="$1"
+	shift
+	local args="$@"
+
+	if [ -z "$NAME" ]; then
+		NAME="tmp"
+	fi
+
+	download_playlist "$URL" "$NAME" "${args[@]}"
+
 	exit 0
 }
 
@@ -99,25 +101,14 @@ download_multiple_playlists () {
 
 		local NAME="$(echo $line | awk '{print $1}')"
 		local URL="$(echo $line | awk '{print $2}')"
+
 		if [ -z "$NAME" -o -z "$URL" ]; then
 			echo 'The following line is incorrect :'
 			echo "$line"
 			exit 1
 		fi
 
-		if [ ! -e "$ROOT/$NAME" ]; then
-			mkdir "$ROOT/$NAME"
-		elif [ ! -d "$ROOT/$NAME" ]; then
-			echo "Could not create directory $NAME, file exists"
-			exit 1
-		fi
-
-		local args2=()
-		args2="${args[@]}"
-		args2+=("--output" "$ROOT/$NAME/%(title)s.%(ext)s")
-		args2+=("--download-archive" "$ROOT/$NAME/${ARCHIVE_FILE}")
-
-		download_playlist "$URL" "${args2[@]}" 
+		download_playlist "$URL" "$NAME" "${args2[@]}" 
 
 	done < "$URL_FILE"
 
@@ -153,7 +144,6 @@ fi
 args+=("--ignore-config"
 	"--ignore-errors"
         "--yes-playlist"
-	"--rate" "${RATE}"
 	"--restrict-filenames"
 	"-4"
 	"--continue"
