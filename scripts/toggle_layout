@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Wow such fancy header very not want to write it
+# Toggle change on keyboard layout to switch between fr and us
+
+# Status file for the layout of the keyboard
+STATUS_FILE="$HOME/.config/.toggle_layout"
+
+
+set_layout() {
+	layout="$1"
+	setxkbmap "$layout" || ( echo "Failed to change layout to $layout" && exit 1 ) 
+	echo $layout
+	echo "$layout" > ${STATUS_FILE} 2> /dev/null
+	echo "Successfully set keyboard layout to $layout"
+	exit 0
+}
+
+
+DIR="$(dirname $STATUS_FILE)"
+[[ -d "${DIR}" ]] || echo "WARNING --- The folder supposed to contain the status file " \
+				"does not exist"
+
+MAP=$(setxkbmap -query | grep -i 'layout' | awk '{ print $2 }')
+
+if [ -z $MAP ]; then
+	echo "Failed when attempting to get the current layout"
+	exit 1
+fi
+
+[[ "X$MAP" = "Xus" ]] && layout="fr" || layout="us"
+set_layout "$layout"
+
+
