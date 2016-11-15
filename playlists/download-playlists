@@ -75,7 +75,7 @@ download_playlist () {
 	args+=("--download-archive" "$ROOT/$NAME/${ARCHIVE_FILE}")
 
 	youtube-dl ${args[@]} --exec "ffmpeg -i {} -metadata artist=\"$NAME\"\
-	       	-metatdata album=\"$NAME\" {}.tmp.mp3; mv {}.tmp.mp3 {}" -- "$URL" || true
+	       	-metadata album=\"$NAME\" {}.tmp.mp3; mv {}.tmp.mp3 {}" -- "$URL" || true
 }
 
 download_single_playlist () {
@@ -108,7 +108,7 @@ download_multiple_playlists () {
 			exit 1
 		fi
 
-		download_playlist "$URL" "$NAME" "${args2[@]}" 
+		download_playlist "$URL" "$NAME" "${args[@]}" 
 
 	done < "$URL_FILE"
 
