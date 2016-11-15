@@ -1,13 +1,19 @@
 #!/bin/bash
 
-config="config"
-i3status=".i3status.conf"
 i3folder="${HOME}/.i3"
+dunstfolder="${HOME}/.config/dunst"
 
-[[ ! -d "$i3folder" ]] && mkdir "$i3folder"
 
-[[ -e "$i3folder/$config" ]] && mv "$i3folder/$config" "$i3folder/${config}.old"
-cp "./$config" "$i3folder/."
 
-[[ -e "${HOME}/$i3status" ]] && mv "${HOME}/$i3status" "${HOME}/${i3status}.old"
-cp "$i3status" "${HOME}/$i3status"
+# Creating i3 config 
+mkdir -p "$i3folder"
+ln -sb "$PWD/config" "$i3folder"
+
+# Creating i3status config
+ln -sb "$PWD/.i3status.conf" "${HOME}"
+
+# Creating dunst
+mkdir -p "$dunstfolder"
+ln -sb "$PWD/dunstrc" "$dunstfolder"
+
+

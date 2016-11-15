@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-[[ ! -d "${HOME}/bin" ]] && mkdir "${HOME}/bin" 
-
-cp "download-playlists" "upload-playlists" "${HOME}/bin/."
-echo "$PATH" | grep "${HOME}/bin" || PATH="$PATH:${HOME}/bin"
+mkdir -p "${HOME}/bin" 
+ln -sb "$PWD/download-playlists" "$PWD/upload-playlists" "${HOME}/bin"
