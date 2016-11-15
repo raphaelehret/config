@@ -10,20 +10,20 @@ STATUS_FILE="$HOME/.config/.toggle_layout"
 set_layout() {
 	layout="$1"
 	setxkbmap "$layout" || ( echo "Failed to change layout to $layout" && exit 1 ) 
-	echo $layout
-	echo "$layout" > ${STATUS_FILE} 2> /dev/null
+	echo "$layout"
+	echo "$layout" > "${STATUS_FILE}" 2> /dev/null
 	echo "Successfully set keyboard layout to $layout"
 	exit 0
 }
 
 
-DIR="$(dirname $STATUS_FILE)"
+DIR="$(dirname "$STATUS_FILE")"
 [[ -d "${DIR}" ]] || echo "WARNING --- The folder supposed to contain the status file " \
 				"does not exist"
 
 MAP=$(setxkbmap -query | grep -i 'layout' | awk '{ print $2 }')
 
-if [ -z $MAP ]; then
+if [ -z "$MAP" ]; then
 	echo "Failed when attempting to get the current layout"
 	exit 1
 fi

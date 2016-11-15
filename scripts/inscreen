@@ -4,7 +4,7 @@
 # The screen will be named after the first argument (often the command)
 # If the screen already exists, it will use an existing one
 
-COMMAND=$@
+COMMAND="$*"
 MAIN=$1
 
 # Uncomment the following line and delete the next one if you want
