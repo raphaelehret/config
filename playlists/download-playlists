@@ -25,6 +25,7 @@ usage (){
 	echo "  -v, --verbose       Verbose output"
 	echo "  --no-progress       Output a progress bar while downloading"
 	echo "  --log               Sends everything to log file"         
+    echo "  -s, --show          Print the download commands and exit"
 	echo "  -h, --help          Prints this help"
 
 	exit 1
@@ -35,7 +36,7 @@ args=()
 URL=''
 LOGGING=false
 
-INPUT_ARGS="$(getopt --name $0 --options u:vpn:h --longoptions help,url:,log,verbose,name:,no-progress -- $@)"
+INPUT_ARGS="$(getopt --name "$0" --options u:vpn:hs --longoptions help,url:,log,verbose,name:,no-progress,show -- "$@")"
 
 
 eval set -- "$INPUT_ARGS"
@@ -46,6 +47,7 @@ while [ "$1" != "--" ]; do
 		--no-progress )      args+=("--no-progress");;
 		-u | --url    )      URL="$2"; shift;;
 		-n | --name   )      NAME="$2"; shift;;
+        -s | --show   )      SHOW=true;;
 		--log         )      LOGGING=true;;
 		*             )      usage;;
 	esac
@@ -62,7 +64,7 @@ download_playlist () {
 	local URL="$1"
 	local NAME="$2"
 	shift 2
-	local args="$@"
+    local args=("$@")
 
 	if [ ! -e "$ROOT/$NAME" ]; then
 		mkdir "$ROOT/$NAME"
@@ -74,14 +76,20 @@ download_playlist () {
 	args+=("--output" "$ROOT/$NAME/%(title)s.%(ext)s")
 	args+=("--download-archive" "$ROOT/$NAME/${ARCHIVE_FILE}")
 
-	youtube-dl ${args[@]} --exec "ffmpeg -i {} -metadata artist=\"$NAME\"\
+    if [ "$SHOW" == true ]; then
+#       echo  youtube-dl "${args[@]}" --exec "ffmpeg -i {} -metadata artist=\"$NAME\"\
+#	       	-metadata album=\"$NAME\" {}.tmp.mp3; mv {}.tmp.mp3 {}" -- "$URL" || true
+        :
+   else
+       youtube-dl "${args[@]}" --exec "ffmpeg -i {} -metadata artist=\"$NAME\"\
 	       	-metadata album=\"$NAME\" {}.tmp.mp3; mv {}.tmp.mp3 {}" -- "$URL" || true
+   fi
 }
 
 download_single_playlist () {
 	local NAME="$1"
 	shift
-	local args="$@"
+    local args=("$@")
 
 	if [ -z "$NAME" ]; then
 		NAME="tmp"
@@ -93,16 +101,18 @@ download_single_playlist () {
 }
 
 download_multiple_playlists () {
-	local args="$@"
+    local args=("$@")
 
-	while read line; do
+	while read -r line; do
 		echo
-		echo === $line ===
+		echo === "$line" ===
 
-		local NAME="$(echo $line | awk '{print $1}')"
-		local URL="$(echo $line | awk '{print $2}')"
+		local NAME
+        NAME="$(echo "$line" | awk '{print $1}')"
+		local 
+        URL="$(echo "$line" | awk '{print $2}')"
 
-		if [ -z "$NAME" -o -z "$URL" ]; then
+		if [ -z "$NAME" ] || [ -z "$URL" ]; then
 			echo 'The following line is incorrect :'
 			echo "$line"
 			exit 1
@@ -136,7 +146,7 @@ if ! which youtube-dl > /dev/null 2>&1 || ! which ffmpeg > /dev/null 2>&1; then
 fi
 
 
-if [ ! -s "${URL_FILE}" -a -z "$URL" ]; then
+if [ ! -s "${URL_FILE}" ] && [ -z "$URL" ]; then
 	echo "URL file empty or non-existant, exit with status code 1" 
 	exit 1
 fi
