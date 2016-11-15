@@ -208,6 +208,9 @@ bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
 # Brightness up
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
 
+# Calculator key
+bindsym XF86Calculator exec --no-startup-id gnome-calculator
+
 # Media player controls
 # I do not know if this work
 #bindsym XF86AudioPlay exec playerctl play
@@ -229,13 +232,13 @@ bindsym Mod4+Return exec i3-sensible-terminal
 bindsym Mod4+d exec dmenu_run
 
 # exec my own script to switch between fr and us keyboard
-bindsym Mod4+u exec "keymap"
+bindsym Mod4+u exec "toggle_layout"
 
 # These bindings are used to open some user apps
 # Here, inscreen is a command I made to launch the app in a screen
 # rather than launching it "blindly"
 mode "apps" {
-    bindsym c exec "inscreen google-chrome-stable &"
+    bindsym f exec "inscreen firefox &"
     bindsym d exec "inscreen dofus"
     bindsym w exec "inscreen wicd-client -n"
     bindsym m exec "inscreen minecraft"
@@ -262,24 +265,5 @@ mode "screenshot" {
 
 bindsym Mod4+y mode "screenshot"
 
-mode "multi-account-no-click" {
-    bindsym Tab exec "nextone"
 
-    bindsym --whole-window Mod4+button1 mode "default"
-    bindsym --whole-window Mod4+button3 mode "default"
-    bindsym Mod4+Tab mode "default"
-}
 
-bindsym Mod4+Tab mode "multi-account-no-click"
-
-mode "multi-account" {
-    bindsym --whole-window button1 exec "multiclicker click 1"
-    bindsym --whole-window button3 exec "multiclicker click 3"
-    bindsym Tab exec "nextone"
-
-    bindsym --whole-window Mod4+button1 mode "default"
-    bindsym --whole-window Mod4+button3 mode "default"
-}
-
-bindsym --whole-window Mod4+button1 mode "multi-account"
-bindsym --whole-window Mod4+button3 mode "multi-account"
