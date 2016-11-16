@@ -4,14 +4,16 @@
 # Toggle change on keyboard layout to switch between fr and us
 
 # Status file for the layout of the keyboard
-STATUS_FILE="$HOME/.config/.toggle_layout"
+STATUS_FILE="/tmp/layout"
 
 
 set_layout() {
 	layout="$1"
-	setxkbmap "$layout" || ( echo "Failed to change layout to $layout" && exit 1 ) 
+    setxkbmap "$layout" || ( echo "Failed to change layout to $layout" && exit 1 )
 	echo "$layout"
-	echo "$layout" > "${STATUS_FILE}" 2> /dev/null
+    mkdir -p "${STATUS_FILE}"
+    rm "${STATUS_FILE}/"*
+    touch "${STATUS_FILE}/${layout}"
 	echo "Successfully set keyboard layout to $layout"
 	exit 0
 }

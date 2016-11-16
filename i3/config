@@ -72,6 +72,19 @@ exec --no-startup-id dunst
 # finds out, if available)
 bar {
         status_command i3status
+        font pango:monospace 13
+		colors {
+				# Whole color settings
+				background #222222
+				statusline #ffffff
+				separator  #666666
+
+				# Type             border  background font
+				focused_workspace  #008fff #007fff #ffffff
+				active_workspace   #333333 #5f676a #ffffff
+				inactive_workspace #333333 #aaaaaa #888888
+				urgent_workspace   #aa0000 #990000 #ffffff
+		}
 }
 
 ##############################################
