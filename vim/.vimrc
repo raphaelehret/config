@@ -6,6 +6,8 @@ filetype plugin indent on
 set number
 " enable syntax highlighting
 syntax enable
+" enable highlighting on search
+set hlsearch
 
 
 " show existing tab with 4 spaces width
@@ -18,13 +20,43 @@ set expandtab
 set nowrap
 
 
-""" Syntastic plugin configuration
+"""""""""""""""""""""""""""""""""""""""
+"""              Keys               """
+"""""""""""""""""""""""""""""""""""""""
+
+" Set the paste button 
+set pastetoggle=<F2>
+
+" Get rid of that stupid windows
+map q: :q
+
+" Hide highlight on search with <leader><space>
+nnoremap <leader><space> :nohlsearch<CR>
+
+" Toogle syntastic with F4
+map <F4> :SyntasticToggleMode<CR>
+
+" Run syntastic check
+map <leader>c :SyntasticCheck<CR>
+
+
+
+"""""""""""""""""""""""""""""""""""""""
+""" Syntastic plugin configuration """"
+"""""""""""""""""""""""""""""""""""""""
+
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
+" Allow to display the location list
 let g:syntastic_always_populate_loc_list = 1
+" Automaticaly open and close the location list on error
 let g:syntastic_auto_loc_list = 1
+" Runs the checker on open but not on :wq
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+" Make the cursor jump to the next error, but not warning
+let g:syntastic_auto_jump = 2
+
 
