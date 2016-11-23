@@ -8,7 +8,7 @@
 #   DESCRIPTION: 
 # 
 #       OPTIONS: None
-#  REQUIREMENTS: zsh, oh-my-zsh
+#  REQUIREMENTS: zsh, oh-my-zsh, curl
 #          BUGS: ---
 #         NOTES: This is my own configuration, you may want to modify it
 #                 depending on your preferences
@@ -29,4 +29,9 @@ else
     echo "Linking configuration"
     ln -s "$PWD/.zshrc" ~
     ln -s "$PWD/.profile" ~
+
+    echo "Done!"
+    echo "If you have troubles with japanese caracters, you can download
+        otf-ipafont package using your favourite package manager! For more, see
+        https://en.wikipedia.org/wiki/Help:Multilingual_support_%28East_Asian%29#Debian-based_GNU.2FLinux"
 fi
