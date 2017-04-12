@@ -27,8 +27,13 @@ else
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
     echo "Linking configuration"
-    ln -s "$PWD/.zshrc" ~
-    ln -s "$PWD/.profile" ~
+    ln -sf "$PWD/.zshrc" ~/.zshrc
+    ln -sf "$PWD/.profile" ~/.profile
+
+    echo "Installing shell syntax highlighting plugin"
+    ( cd $HOME/.oh-my-zsh/custom/plugins
+      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+    )
 
     echo "Done!"
     echo "If you have troubles with japanese caracters, you can download

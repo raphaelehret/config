@@ -125,7 +125,3 @@ function spoofit (){
 
 ############# ENABLING #############
 
-# Display a fortune-like message related to dofus (www.dofus.com)
-# https://github.com/raphaelehret/config/blob/master/scripts/almanax
-~/bin/almanax
-
