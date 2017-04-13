@@ -37,7 +37,7 @@ HIST_STAMPS="dd.mm.yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(git sudo pip archlinux fancy-ctrl-z)
+plugins=(git sudo pip archlinux fancy-ctrl-z docker docker-compose)
 
 # User configuration
 
