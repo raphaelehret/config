@@ -27,6 +27,10 @@ set nowrap
 " Set the paste button 
 set pastetoggle=<F2>
 
+" Detect the filetype, therefore refreshing the syntax hightlight
+nnoremap <F5> :filetype detect<CR>
+
+
 " Get rid of that stupid windows
 map q: :q
 
