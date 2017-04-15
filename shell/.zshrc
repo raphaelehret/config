@@ -7,8 +7,7 @@ export ZSH=~/.oh-my-zsh
 # Loads zmv plugin 
 autoload -U zmv
 
-ZSH_GRAPHIC_THEME="my_agnoster"
-#ZSH_GRAPHIC_THEME="bullet-train"
+ZSH_GRAPHIC_THEME="xiong-chiamiov"
 ZSH_NO_GRAPHIC_THEME="xiong-chiamiov"
 #DEFAULT_USER=hamtarowarrior
 
@@ -38,7 +37,7 @@ HIST_STAMPS="dd.mm.yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(git sudo pip archlinux fancy-ctrl-z)
+plugins=(git sudo pip archlinux fancy-ctrl-z docker docker-compose)
 
 # User configuration
 

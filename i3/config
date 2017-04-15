@@ -8,7 +8,7 @@
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:DejaVu Sans Mono 10
 
 # From the man:
 # When receiving SIGUSR1, i3status’s nanosleep() will be interrupted and thus
@@ -58,7 +58,7 @@ exec --no-startup-id dunst
 # finds out, if available)
 bar {
     status_command i3status
-        font pango:monospace 13
+        font pango:DejaVu Sans Mono 14
         position top
         separator_symbol " / "
 		colors {
@@ -136,7 +136,7 @@ bindsym Mod4+space focus mode_toggle
 bindsym Mod4+a focus parent
 
 # focus the child container
-#bindsym Mod4+d focus child
+bindsym Mod4+d focus child
 
 # move the currently focused window to the scratchpad
 bindsym Mod4+Shift+minus move scratchpad
@@ -168,28 +168,31 @@ mode "resize" {
 bindsym Mod4+r mode "resize"
 
 # switch to workspace
-bindsym Mod4+1 workspace 1
-bindsym Mod4+2 workspace 2
-bindsym Mod4+3 workspace 3
-bindsym Mod4+4 workspace 4
-bindsym Mod4+5 workspace 5
-bindsym Mod4+6 workspace 6
-bindsym Mod4+7 workspace 7
-bindsym Mod4+8 workspace 8
-bindsym Mod4+9 workspace 9
-bindsym Mod4+0 workspace 10
+bindsym Mod4+1 workspace number 1
+bindsym Mod4+2 workspace number 2
+bindsym Mod4+3 workspace number 3
+bindsym Mod4+4 workspace number 4
+bindsym Mod4+5 workspace number 5
+bindsym Mod4+6 workspace number 6
+bindsym Mod4+7 workspace number 7
+bindsym Mod4+8 workspace number 8
+bindsym Mod4+9 workspace number 9
+bindsym Mod4+0 workspace number 10
 
 # move focused container to workspace
-bindsym Mod4+Shift+1 move container to workspace 1
-bindsym Mod4+Shift+2 move container to workspace 2
-bindsym Mod4+Shift+3 move container to workspace 3
-bindsym Mod4+Shift+4 move container to workspace 4
-bindsym Mod4+Shift+5 move container to workspace 5
-bindsym Mod4+Shift+6 move container to workspace 6
-bindsym Mod4+Shift+7 move container to workspace 7
-bindsym Mod4+Shift+8 move container to workspace 8
-bindsym Mod4+Shift+9 move container to workspace 9
-bindsym Mod4+Shift+0 move container to workspace 10
+bindsym Mod4+Shift+1 move container to workspace number 1
+bindsym Mod4+Shift+2 move container to workspace number 2
+bindsym Mod4+Shift+3 move container to workspace number 3
+bindsym Mod4+Shift+4 move container to workspace number 4
+bindsym Mod4+Shift+5 move container to workspace number 5
+bindsym Mod4+Shift+6 move container to workspace number 6
+bindsym Mod4+Shift+7 move container to workspace number 7
+bindsym Mod4+Shift+8 move container to workspace number 8
+bindsym Mod4+Shift+9 move container to workspace number 9
+bindsym Mod4+Shift+0 move container to workspace number 10
+
+# rename a workspace
+bindsym Mod4+n exec "i3-wd-name"
 
 
 ##############################################
@@ -232,9 +235,6 @@ bindsym XF86Calculator exec --no-startup-id gnome-calculator
 # start a terminal
 bindsym Mod4+Return exec i3-sensible-terminal
 
-# start dmenu (a program launcher)
-bindsym Mod4+d exec dmenu_run
-
 # exec my own script to switch between fr and us keyboard
 bindsym Mod4+u exec "toggle_layout"
 
@@ -246,7 +246,7 @@ mode "apps" {
     bindsym d exec "inscreen dofus"
     bindsym w exec "inscreen wicd-client -n"
     bindsym m exec "inscreen minecraft"
-    bindsym t exec "inscreen teamspeak3"
+    bindsym t exec "inscreen thunderbird"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -268,6 +268,3 @@ mode "screenshot" {
 }
 
 bindsym Mod4+y mode "screenshot"
-
-
-

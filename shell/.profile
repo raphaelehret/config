@@ -2,13 +2,12 @@
 
 ############ Local variables ###############
 
+LC_ALL=en_US.UTF-8
+export LC_ALL
+
 #Root of the Boost C++ library
 BOOST_ROOT=/home/hamtarowarrior/lib/boost
 export BOOST_ROOT 
-
-#Gameboy Development Kit
-GBDKDIR='/opt/gbdk/'
-export GBDKDIR
 
 #Set default git editor as vim
 GIT_EDITOR=vim
@@ -33,10 +32,6 @@ export DBUS_VALUE_FILEPATH
 # Adding my own bin folder
 PATH=$PATH:~/bin/
 export PATH
-
-# Path to my external hard drive
-DDE='/run/media/hamtarowarrior/HamtaroWarrior/'
-export DDE
 
 ##################### ALIASES #####################
 
@@ -124,8 +119,4 @@ function spoofit (){
 
 
 ############# ENABLING #############
-
-# Display a fortune-like message related to dofus (www.dofus.com)
-# https://github.com/raphaelehret/config/blob/master/scripts/almanax
-~/bin/almanax
 

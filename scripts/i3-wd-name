@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if ! which jq; then
+    i3-nagbar -t "Please install jq to rename your workspaces"
+    exit 1
+fi
+
+CURRENT_WORKSPACE="$(i3-msg -t get_workspaces | \
+    jq '.[] | select(.focused==true).num' | \
+    cut -d"\"" -f2)"
+
+i3-input -F "rename workspace to \"$CURRENT_WORKSPACE: %s\"" -P 'New workpace name :'
