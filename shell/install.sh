@@ -23,8 +23,24 @@ set -e
 if [ ! -e "/bin/zsh" ]; then
     echo "Please install zsh before runing this script"
 else 
-    echo "Installing oh-my-zsh"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    OH_MY_ZSH_INSTALL="x"
+    while [ "$OH_MY_ZSH_INSTALL" = "x" ]; do
+        echo 'Do you want to install 'oh-my-zsh'? [YyOo]/[Nn]'
+        printf "> "
+        read -r INPUT
+        case "$INPUT" in
+            Y|y|O|o) OH_MY_ZSH_INSTALL="y";;
+            N|n    ) OH_MY_ZSH_INSTALL="n";;
+            *      ) : ;;
+        esac
+    done
+    
+    if [ "$OH_MY_ZSH_INSTALL" = y ]; then
+        echo "Installing oh-my-zsh"
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    else
+        echo "Skipping oh-my-zsh installation"
+    fi
 
     echo "Linking configuration"
     ln -s "$PWD/.zshrc" ~
