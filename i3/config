@@ -238,17 +238,16 @@ bindsym Mod4+Return exec i3-sensible-terminal
 # exec my own script to switch between fr and us keyboard
 bindsym Mod4+u exec "toggle_layout"
 
-# These bindings are used to open some user apps
-# Here, inscreen is a command I made to launch the app in a screen
+# These bindings are used to open user apps
+# inscreen is a nohup-like command to launch the app in a screen
 # rather than launching it "blindly"
 mode "apps" {
     bindsym f exec "inscreen firefox &"
-    bindsym d exec "inscreen dofus"
     bindsym w exec "inscreen wicd-client -n"
-    bindsym m exec "inscreen minecraft"
     bindsym t exec "inscreen thunderbird"
+    bindsym a exec "inscreen atom"
+    bindsym d exec "inscreen discord"
 
-    # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
