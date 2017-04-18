@@ -6,6 +6,7 @@ filetype plugin indent on
 set number
 " enable syntax highlighting
 syntax enable
+syn on
 " enable highlighting on search
 set hlsearch
 
@@ -62,5 +63,6 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 " Make the cursor jump to the next error, but not warning
 let g:syntastic_auto_jump = 2
-
+" Disable syntastic for scala
+let g:syntastic_mode_map = { 'passive_filetypes': ['scala'] }
 
