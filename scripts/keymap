@@ -1,8 +1,0 @@
-#!/bin/sh
-## Change map to US if FR and FR if US
-MAP="$(setxkbmap -query | grep layout | awk '{ print $2 }')"
-if [ $MAP = 'us' ]; then 
-    setxkbmap fr
-else
-    setxkbmap us
-fi
