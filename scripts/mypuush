@@ -16,11 +16,10 @@
 
 
 print_help () {
+    local name=$(basename $0)
 
-    name=$(basename $0)
-
+    echo "Usage: $name [option] [-a|-w]"
     echo "$name takes a screenshot, uploads it and sends the link in your clipboard"
-    echo "Usage : $name [option] [-a|-w]"
     echo ""
     echo "$name [option] -a"
     echo "  Select area to screenshot"
@@ -32,10 +31,10 @@ print_help () {
     echo "  Send messages to i3-nagbar"
     echo "-q, --quiet"
     echo "  Be quiet (suppress stdout output)"
-    echo "-h, --help"
-    echo "  Display this help"
     echo "-k <path>, --keep=<path>"
     echo "  Saves the screenshot at given path"
+    echo "-h, --help"
+    echo "  Display this help"
     echo ""
 
     exit 1
@@ -50,46 +49,36 @@ NOCOLOR="\033[m"
 # $1 must be either error or success
 # $2 is the message to send
 print_message () {
-    local message="$2"
-    case "$1" in
+    local type="$1" message="$2"
+
+    case "$type" in
         'error' ) color="$RED"; i3color="error";;
-        'success' ) color="$GREEN"; i3color="warning"
+        'success' ) color="$GREEN"; i3color="warning";;
     esac
-    if [ $i3 = true ] && [ $QUIET = false ]; then
+    if [ $I3 = true ] && [ $QUIET = false ]; then
         i3-nagbar -t "$i3color" -m "$message" >/dev/null 2>&1 &
-        pid=$!
-        sleep 7
+        local pid=$!
+        sleep 5
         kill -15 $pid
     else
-        echo -e "${color}$message${NC}" 
+        echo -e "${color}$message${NOCOLOR}" 
     fi
 }
 
-# check if the dependencies are installed, exit with 1 otherwise
-check_programs () {
-    ( which jq \
-        && which gnome-screenshot \
-        && which xclip ) > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        print_message error "Please install gnome-screenshot, jq and xclip"
-        exit 1
-    fi
-} 
-
 # takes a screenshot, exit with 1 if error occured
 screenshot () {
-    if ! gnome-screenshot "$screenshot_mode" -f "$imgpath" 2>/dev/null; then
+    if ! gnome-screenshot "$SCREENSHOT_MODE" -f "$IMGPATH" 2>/dev/null; then
         print_message error "Error while trying to take the screenshot"
         exit 1
-    elif [ ! -f "$imgpath" ]; then
+    elif [ ! -f "$IMGPATH" ]; then
         print_message error "Screenshot file do not exist but return code was 0"
         exit 1
     fi
 }
 
-# upload the screenshot to uploads.im, exit with 1 if file did not upload
+# uploads the screenshot to uploads.im, exit with 1 if file did not upload
 upload_screenshot () {
-    local response="$(curl -sS -F "upload=@$imgpath" "http://uploads.im/api")"
+    local response="$(curl -sS -F "upload=@$IMGPATH" "http://uploads.im/api")"
     if [ $? -ne 0 ]; then
         print_message error "curl could not upload file : $reponse"
     elif [ ! "x$(jq '.status_code' <<< "$response")" = "x200" ]; then
@@ -97,36 +86,44 @@ upload_screenshot () {
             $(jq '.status_txt' <<< "$response")"
         exit 1
     fi
-    url=$(jq -r '.data.img_url' <<< "$response")
+    local url="$(jq -r '.data.img_url' <<< "$response")"
     xclip -sel clip <<< "$url"
     print_message success "Upload successful, image uploaded at url: $url"
 }
-    
-i3=false
-screenshot_mode=""
-imgpath="/tmp/$(date '+%d-%m-%y_%Hh%M').png"
+
+# checks if the dependencies are installed, exit with 1 otherwise
+( which jq \
+    && which gnome-screenshot \
+    && which xclip ) >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    print_message error "Please install gnome-screenshot, jq and xclip"
+    exit 1
+fi
+
+I3=false
+SCREENSHOT_MODE=""
+IMGPATH="$(mktemp).png"
 QUIET=false
 
-OPTS="$(getopt -o "awiqhk:" -l "i3,quiet,help,keep:" -n $(basename "$0") -- "$@")"
+OPTS="$(getopt -o "awiqhk:" -l "i3,quiet,help,keep:" -n $(basename "$0") -- "$@")"\
+    || print_help
 eval set -- "$OPTS"
 while true; do
     case "$1" in
-        '-a' |  '-w' ) screenshot_mode="$1";;
-        '-i' | '--i3' ) i3=true;;
+        '-a' |  '-w' ) SCREENSHOT_MODE="$1";;
+        '-i' | '--i3' ) I3=true;;
         '-q' | '--quiet' ) QUIET=true;;
         '-h' | '--help'  ) print_help;;
-        '-k' | '--keep'  ) imgpath="$2"; shift;;
+        '-k' | '--keep'  ) IMGPATH="$2"; shift;;
         '--' ) break;;
         * ) print_help;;
     esac
     shift
 done
-
 if [ $QUIET = true ]; then
     exec >/dev/null
     exec 2>&1
 fi
 
-check_programs
 screenshot
 upload_screenshot
