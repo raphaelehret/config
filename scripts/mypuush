@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+
+##############################################################################
+###                                                                        ###
+###  File : mypuush                                                        ###
+###  Language : bash                                                       ###
+###  Description : takes a screenshot of your screen, uploads the file     ###
+###     and send the link it the clipboard                                 ###
+###                                                                        ###
+###  Dependencies : xclip, jq, gnome-screenshot                            ###
+###                                                                        ###
+###  Author : Raphael Ehret                                                ###
+###  E-mail : raphael.ehret@gmail.com                                      ###
+###                                                                        ###
+##############################################################################
+
+
+print_help () {
+
+    name=$(basename $0)
+
+    echo "$name takes a screenshot, uploads it and sends the link in your clipboard"
+    echo "Usage : $name [option] [-a|-w]"
+    echo ""
+    echo "$name [option] -a"
+    echo "  Select area to screenshot"
+    echo "$name [option] -w"
+    echo "  Screenshot the current window"
+    echo ""
+    echo "Options"
+    echo "-i, --i3"
+    echo "  Send messages to i3-nagbar"
+    echo "-q, --quiet"
+    echo "  Be quiet (suppress stdout output)"
+    echo "-h, --help"
+    echo "  Display this help"
+    echo "-k <path>, --keep=<path>"
+    echo "  Saves the screenshot at given path"
+    echo ""
+
+    exit 1
+}
+
+# Output colors
+RED="\033[31m"
+GREEN="\033[32m"
+NOCOLOR="\033[m"
+
+# print_message writes a message to stdout or i3 if the i3 variable is set to true
+# $1 must be either error or success
+# $2 is the message to send
+print_message () {
+    local message="$2"
+    case "$1" in
+        'error' ) color="$RED"; i3color="error";;
+        'success' ) color="$GREEN"; i3color="warning"
+    esac
+    if [ $i3 = true ] && [ $QUIET = false ]; then
+        i3-nagbar -t "$i3color" -m "$message" >/dev/null 2>&1 &
+        pid=$!
+        sleep 7
+        kill -15 $pid
+    else
+        echo -e "${color}$message${NC}" 
+    fi
+}
+
+# check if the dependencies are installed, exit with 1 otherwise
+check_programs () {
+    ( which jq \
+        && which gnome-screenshot \
+        && which xclip ) > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        print_message error "Please install gnome-screenshot, jq and xclip"
+        exit 1
+    fi
+} 
+
+# takes a screenshot, exit with 1 if error occured
+screenshot () {
+    if ! gnome-screenshot "$screenshot_mode" -f "$imgpath" 2>/dev/null; then
+        print_message error "Error while trying to take the screenshot"
+        exit 1
+    elif [ ! -f "$imgpath" ]; then
+        print_message error "Screenshot file do not exist but return code was 0"
+        exit 1
+    fi
+}
+
+# upload the screenshot to uploads.im, exit with 1 if file did not upload
+upload_screenshot () {
+    local response="$(curl -sS -F "upload=@$imgpath" "http://uploads.im/api")"
+    if [ $? -ne 0 ]; then
+        print_message error "curl could not upload file : $reponse"
+    elif [ ! "x$(jq '.status_code' <<< "$response")" = "x200" ]; then
+        print_message error "Error while trying to upload image with status message\
+            $(jq '.status_txt' <<< "$response")"
+        exit 1
+    fi
+    url=$(jq -r '.data.img_url' <<< "$response")
+    xclip -sel clip <<< "$url"
+    print_message success "Upload successful, image uploaded at url: $url"
+}
+    
+i3=false
+screenshot_mode=""
+imgpath="/tmp/$(date '+%d-%m-%y_%Hh%M').png"
+QUIET=false
+
+OPTS="$(getopt -o "awiqhk:" -l "i3,quiet,help,keep:" -n $(basename "$0") -- "$@")"
+eval set -- "$OPTS"
+while true; do
+    case "$1" in
+        '-a' |  '-w' ) screenshot_mode="$1";;
+        '-i' | '--i3' ) i3=true;;
+        '-q' | '--quiet' ) QUIET=true;;
+        '-h' | '--help'  ) print_help;;
+        '-k' | '--keep'  ) imgpath="$2"; shift;;
+        '--' ) break;;
+        * ) print_help;;
+    esac
+    shift
+done
+
+if [ $QUIET = true ]; then
+    exec >/dev/null
+    exec 2>&1
+fi
+
+check_programs
+screenshot
+upload_screenshot
