@@ -256,10 +256,9 @@ bindsym Mod4+o mode "apps"
 
 # These bindings are used for my personnal puush
 mode "screenshot" {
-    bindsym 1 exec "mypuush"
-    bindsym 2 exec "mypuush -w"
-    bindsym 4 exec "mypuush -a"
-    bindsym 3 exec "recoverlink"
+    bindsym 1 exec "mypuush --i3"
+    bindsym 2 exec "mypuush --i3 -w"
+    bindsym 4 exec "mypuush --i3 -a"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
