@@ -16,7 +16,8 @@
 
 
 print_help () {
-    local name=$(basename $0)
+    local name
+    name="$(basename "$0")"
 
     echo "Usage: $name [option] [-a|-w]"
     echo "$name takes a screenshot, uploads it and sends the link in your clipboard"
@@ -55,7 +56,7 @@ print_message () {
         'error' ) color="$RED"; i3color="error";;
         'success' ) color="$GREEN"; i3color="warning";;
     esac
-    if [ $I3 = true ] && [ $QUIET = false ]; then
+    if [ "$I3" = true ] && [ "$QUIET" = false ]; then
         i3-nagbar -t "$i3color" -m "$message" >/dev/null 2>&1 &
         local pid=$!
         sleep 5
@@ -78,24 +79,25 @@ screenshot () {
 
 # uploads the screenshot to uploads.im, exit with 1 if file did not upload
 upload_screenshot () {
-    local response="$(curl -sS -F "upload=@$IMGPATH" "http://uploads.im/api")"
-    if [ $? -ne 0 ]; then
-        print_message error "curl could not upload file : $reponse"
+    local response
+    local url
+
+    if ! response="$(curl -sS -F "upload=@$IMGPATH" "http://uploads.im/api")"; then
+        print_message error "curl could not upload file : $response"
     elif [ ! "x$(jq '.status_code' <<< "$response")" = "x200" ]; then
         print_message error "Error while trying to upload image with status message\
             $(jq '.status_txt' <<< "$response")"
         exit 1
     fi
-    local url="$(jq -r '.data.img_url' <<< "$response")"
+    url="$(jq -r '.data.img_url' <<< "$response")"
     xclip -sel clip <<< "$url"
     print_message success "Upload successful, image uploaded at url: $url"
 }
 
 # checks if the dependencies are installed, exit with 1 otherwise
-( which jq \
-    && which gnome-screenshot \
-    && which xclip ) >/dev/null 2>&1
-if [ $? -ne 0 ]; then
+if ! ( which jq \
+        && which gnome-screenshot \
+        && which xclip ) >/dev/null 2>&1; then
     print_message error "Please install gnome-screenshot, jq and xclip"
     exit 1
 fi
@@ -105,7 +107,7 @@ SCREENSHOT_MODE=""
 IMGPATH="$(mktemp).png"
 QUIET=false
 
-OPTS="$(getopt -o "awiqhk:" -l "i3,quiet,help,keep:" -n $(basename "$0") -- "$@")"\
+OPTS="$(getopt -o "awiqhk:" -l "i3,quiet,help,keep:" -n "$(basename "$0")" -- "$@")"\
     || print_help
 eval set -- "$OPTS"
 while true; do
