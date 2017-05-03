@@ -7,7 +7,7 @@ export ZSH=~/.oh-my-zsh
 # Loads zmv plugin 
 autoload -U zmv
 
-ZSH_GRAPHIC_THEME="xiong-chiamiov"
+ZSH_GRAPHIC_THEME="gnzh"
 ZSH_NO_GRAPHIC_THEME="xiong-chiamiov"
 #DEFAULT_USER=hamtarowarrior
 
@@ -37,44 +37,18 @@ HIST_STAMPS="dd.mm.yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(git sudo pip archlinux fancy-ctrl-z docker docker-compose)
-
-# User configuration
+plugins=(git sudo pip archlinux docker docker-compose colored-man-pages)
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
 
-# You may need to manually set your language environment
-export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
 # Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+export ARCHFLAGS="-arch x86_64"
 
 # Load the general profile file
 source ~/.profile
 
-# Load old zsh options
-#source ~/.zsh_profile
-
 # Load Syntax HighLighting
-source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+syntax_plugin="${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[[ -f "$syntax_plugin" ]] && source $syntax_plugin
