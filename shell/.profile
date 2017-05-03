@@ -5,6 +5,9 @@
 LC_ALL=en_US.UTF-8
 export LC_ALL
 
+#Timeout of key combinations
+KEYTIMEOUT=1
+
 #Root of the Boost C++ library
 BOOST_ROOT=/home/hamtarowarrior/lib/boost
 export BOOST_ROOT 
