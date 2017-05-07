@@ -94,7 +94,7 @@ alias cpr='cp -r'
 alias sysu='systemctl --user'
 
 if [ $SHELL = '/bin/zsh' ]; then
-    if [ ! -z '~/.zsh_aliases' ]; then
+    if [ -f '~/.zsh_aliases' ]; then
         source ~/.zsh_aliases
     fi
 fi
