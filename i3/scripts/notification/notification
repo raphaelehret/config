@@ -1,0 +1,82 @@
+#!/bin/bash -
+#===============================================================================
+#
+#          FILE: notify.sh
+# 
+#         USAGE: ./notify.sh 
+# 
+#   DESCRIPTION: Notify users using the provided scripts.
+#                 This is meant to be launched by a deamon
+#                 to avoid multiple notifications script to be launched at 
+#                 the same time
+#
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: notify-send
+#          BUGS: ---
+#        AUTHOR: Raphael EHRET (), raphael[dot]ehret[at]gmail[dot]com
+#       CREATED: 11/15/2016 06:36:35 PM
+#===============================================================================
+
+declare PID_FILE="/var/run/notification/pid_file"
+
+help () {
+    echo "Usage: $0 mode"
+
+    echo 'Mode can be'
+    echo '  start  : start the notification scripts'
+    echo '  stop   : stop the notification scripts'
+    echo '  reload : execute stop then start'
+    echo '  help   : print this help'
+
+    exit 0
+}
+
+stop () {
+    while read -r pid; do
+        kill -9 "$pid"
+    done < "$PID_FILE"
+}
+
+start () {
+    declare notification_folder=~/.i3/scripts/notification
+
+    for file in $notification_folder/*.notification; do
+        $file &
+        echo "$!"
+    done > "$PID_FILE"
+    while :; do :; done
+}
+
+reload () {
+    stop
+    start
+}
+
+main () {
+    declare PID_FILE_PATH MODE="$1"; shift
+    PID_FILE_PATH="$(dirname "$PID_FILE")"
+
+    if [ ! -d "$PID_FILE_PATH" ]; then
+        echo "The directory $PID_FILE_PATH does not exist. "
+        echo "Please run the following commands as root :"
+        echo "# mkdir $PID_FILE_PATH"
+        echo "# chown USER $PID_FILE_PATH"
+        exit 1
+    elif [ ! -w "$PID_FILE_PATH" ]; then
+        echo "Permission denied : unsufficient permissions on the directory $PID_FILE_PATH" 
+        echo "Please run the following command as root :"
+        echo "# chown USER $PID_FILE_PATH"
+        exit 1
+    fi
+
+    case "$MODE" in
+        start | stop | reload) "$MODE";;
+        *) help;;
+
+    esac
+
+}
+
+main "$@"
+

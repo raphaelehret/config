@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#===============================================================================
+#
+#          FILE: battery.notification
+# 
+#         USAGE: ./battery.notification 
+# 
+#   DESCRIPTION: 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: acpi
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Raphael EHRET (), raphael[dot]ehret[at]gmail[dot]com
+#       CREATED: 11/23/2016 03:44:13 PM
+#===============================================================================
+
+
+main () {
+    declare WAIT='3m' level appname='Battery' icon='battery'
+
+    while true; do
+        level="$(acpi | awk -F' ' '{ print $4 }' | sed -e 's/[,%]//g')"
+        if [ "$level" -lt 20 ]; then
+            notify-send -u critical -a "$appname" -i "$icon" -- \
+                "Battery critically low : ${level}%"
+            WAIT='1m'
+        elif [ "$level" -lt 50 ]; then
+            notify-send -u normal -a "$appname" -i "$icon" -- \
+                "Battery is running low : ${level}%"
+        fi
+
+        sleep "$WAIT"
+    done         
+}
+
+main
