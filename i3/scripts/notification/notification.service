@@ -1,0 +1,10 @@
+[Unit]
+Description=Notification service
+
+[Service]
+ExecStart=/home/hamtarowarrior/.i3/scripts/notification/notification start
+ExecStop=/home/hamtarowarrior/.i3/scripts/notification/notification stop
+ExecReload=/home/hamtarowarrior/.i3/scripts/notification/notification reload
+
+[Install]
+WantedBy=multi-user.target
