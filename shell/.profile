@@ -2,11 +2,17 @@
 
 ############ Local variables ###############
 
+# Excluding unwanted warnings from shellcheck
+# SC1091 : file not found, no permissions, not included on the command line, not allowing shellcheck to follow files with -x, etc.
+SHELLCHECK_OPTS="--exclude=SC1091"
+export SHELLCHECK_OPTS
+
 LC_ALL=en_US.UTF-8
 export LC_ALL
 
 #Timeout of key combinations
 KEYTIMEOUT=1
+export KEYTIMEOUT
 
 #Root of the Boost C++ library
 BOOST_ROOT=/home/hamtarowarrior/lib/boost
@@ -94,7 +100,7 @@ alias cpr='cp -r'
 alias sysu='systemctl --user'
 
 if [ $SHELL = '/bin/zsh' ]; then
-    if [ ! -z '~/.zsh_aliases' ]; then
+    if [ -f "${HOME}/.zsh_aliases" ]; then
         source ~/.zsh_aliases
     fi
 fi
