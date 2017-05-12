@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Source the shell .rc
+if [ "$SHELL" = "/bin/bash" ]; then
+    alias rld="source ~/.bashrc"
+elif [ "$SHELL" = "/bin/zsh" ]; then
+    alias rld="source ~/.zshrc"
+fi
+
+#Logout
+alias lg="killall wpp-changer; i3-msg exit"
+alias logout=lg
+alias stopx=lg
+
+# Set python3 as default python
+alias python='python3'
+
+# Put colors on grep
+alias grep='grep --color=always'
+
+# ls aliases
+alias ls="ls --color=auto"
+alias ll="ls -larth"
+alias l="ls"
+alias sl="ls"
+alias la="ls -al"
+alias ltc="ls -ltc"
+alias lS="ls -lSr"
+
+# What zsh could have included
+alias rmr='rm -r'
+alias cpr='cp -r'
+
+
+alias ic="xclip -sel clip" # Put stdin into clip
+
+alias jctl="journalctl -xe"
+alias sysu='systemctl --user'
+

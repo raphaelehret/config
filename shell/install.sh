@@ -43,11 +43,12 @@ else
     fi
 
     echo "Linking configuration"
-    ln -sf "$PWD/.zshrc" ~/.zshrc
-    ln -sf "$PWD/.profile" ~/.profile
+    ln -sf "$PWD/.zshrc" "${HOME}/.zshrc"
+    ln -sf "$PWD/.profile" "${HOME}/.profile"
+    ln -sf "$PWD/.aliases" "${HOME}/.aliases"
 
     echo "Installing shell syntax highlighting plugin"
-    ( cd $HOME/.oh-my-zsh/custom/plugins
+    ( cd "${HOME}/.oh-my-zsh/custom/plugins"
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
     )
 
