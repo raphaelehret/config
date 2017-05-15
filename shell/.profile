@@ -44,10 +44,12 @@ ccomp(){
 
 # Find functions 
 fname(){ 
-    find . -name "$1"  
+    name="$1"; shift;
+    find . -name "$name" "$@"
 }
 fext() { 
-    find . -name "*.$1"
+    name="$1"; shift;
+    find . -name "*.$name" "$@"
 }
 fdir() { 
     find . -type d "$@"  
