@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/hamtarowarrior/bin'
+let g:netrw_dirhist_2='/home/hamtarowarrior'
+let g:netrw_dirhist_3='/home/hamtarowarrior/bin'
+let g:netrw_dirhist_4='/home/hamtarowarrior/.i3'
+let g:netrw_dirhist_5='/home/hamtarowarrior'
+let g:netrw_dirhist_6='/home/hamtarowarrior/test'
+let g:netrw_dirhist_7='/home/hamtarowarrior/work/migration-mitaka/openstack_toolkit/migrate/migration_mitaka/dev_conf_example'
+let g:netrw_dirhist_8='/home/hamtarowarrior/work/migration-mitaka/openstack_toolkit/migrate/migration_mitaka/dev_conf_example/glance'
+let g:netrw_dirhist_9='/home/hamtarowarrior/work/migration-mitaka/openstack_toolkit/migrate/migration_mitaka/dev'
