@@ -7,7 +7,7 @@ export ZSH=~/.oh-my-zsh
 # Loads zmv plugin 
 autoload -U zmv
 
-ZSH_GRAPHIC_THEME="gnzh"
+ZSH_GRAPHIC_THEME="my_agnoster"
 ZSH_NO_GRAPHIC_THEME="xiong-chiamiov"
 #DEFAULT_USER=hamtarowarrior
 
