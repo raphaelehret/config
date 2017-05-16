@@ -75,9 +75,6 @@ map q: :q
 nnoremap <leader><space> :nohlsearch<CR>
 " Insert a tab rather than spaces
 inoremap <S-Tab> <C-V><Tab>
-" Exit insert mode with Ctrl-D
-imap <C-d> <Esc>
-map <C-d> <Esc>
 " Make Y yank to end of line (as suggested by Vim help)
 noremap Y y$
 " Add a new tab
@@ -87,9 +84,9 @@ map <Leader>t :tabnew<CR>
 """ Syntastic plugin configuration """"
 """""""""""""""""""""""""""""""""""""""
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 " Allow to display the location list
 let g:syntastic_always_populate_loc_list = 1
@@ -100,7 +97,6 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 " Make the cursor jump to the next error, but not warning
 let g:syntastic_auto_jump = 2
-
 
 " Toogle syntastic with F4
 map <F4> :SyntasticToggleMode<CR>
@@ -125,10 +121,8 @@ let g:airline#extensions#tabline#enabled = 1
 " Open NERDTree at startup if no file is specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
 " Open NERDTree at startup if a directory is specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-
 " Close vim if the only window left open is NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
