@@ -58,6 +58,10 @@ Plug 'tpope/vim-fugitive'
 Plug 'brooth/far.vim'
 " NerdTree
 Plug 'scrooloose/nerdtree'
+" Highlight occurences of word under cursor
+Plug 'dominikduda/vim_current_word'
+" Surround with quotes
+Plug 'tpope/vim-surround'
 
 call plug#end()
 
@@ -126,3 +130,27 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 " Close vim if the only window left open is NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"""""""""""""""""""""""""""""""""""""""
+"""  NERDTree plugin configuration """"
+"""""""""""""""""""""""""""""""""""""""
+
+
+"""""""""""""""""""""""""""""""""""""""
+""" vim-current-word configuration """"
+"""""""""""""""""""""""""""""""""""""""
+
+" Twins of word under cursor:
+let g:vim_current_word#highlight_twins = 1
+" The word under cursor:
+let g:vim_current_word#highlight_current_word = 1
+
+" Set colors
+hi CurrentWord ctermbg=53
+hi CurrentWordTwins ctermbg=237
+
+" Toggle plugin
+nmap <leader>v :VimCurrentWordToggle<CR>
+
+" Dont use the plugin with md files
+autocmd FileType markdown let g:vim_current_word#enabled = 0
