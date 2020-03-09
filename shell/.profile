@@ -29,6 +29,12 @@ export PATH=$PATH:~/bin/
 # shellcheck disable=SC1090
 [ -f "${HOME}/.aliases" ] && . "${HOME}/.aliases"
 
+alias xclip="xclip -selection clipboard"
+
+########## TAS VARS ###############
+
+export TAS="/asterix/THALES_ALENIA_SPACE_Toulouse_3114_05150_Externalisation_R3"
+
 ########## SCRIPTS ################
 
 # Fast C compilation. If no second argument, default name is set for output
@@ -56,4 +62,16 @@ fdir() {
 }
 ff() { 
     find . -type f "$@"  
+}
+
+close_all_sockets() {
+    for socket in ~/.ssh/sessions/*.socket; do
+        hostname=$(basename "$socket" .socket | cut -d':' -f1)
+        echo "Closing $socket for host $hostname"
+        ssh $hostname -O exit
+    done
+}
+
+path_dos2unix() {
+    sed 's|\\|/|g' <<< "$@" | tee | xclip
 }

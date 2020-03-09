@@ -20,6 +20,8 @@
 
 set -e
 
+CUSTOM_PLUGIN_DIR="${HOME}/.oh-my-zsh/custom/plugins"
+
 if [ ! -e "/bin/zsh" ]; then
     echo "Please install zsh before runing this script"
 else 
@@ -48,7 +50,8 @@ else
     ln -sf "$PWD/.aliases" "${HOME}/.aliases"
 
     echo "Installing shell syntax highlighting plugin"
-    ( cd "${HOME}/.oh-my-zsh/custom/plugins"
+    ( mkdir $CUSTOM_PLUGIN_DIR
+      cd $CUSTOM_PLUGIN_DIR
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
     )
 

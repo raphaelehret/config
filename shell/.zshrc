@@ -7,7 +7,7 @@ export ZSH=~/.oh-my-zsh
 # Loads zmv plugin 
 autoload -U zmv
 
-ZSH_GRAPHIC_THEME="my_agnoster"
+ZSH_GRAPHIC_THEME="agnoster"
 ZSH_NO_GRAPHIC_THEME="xiong-chiamiov"
 #DEFAULT_USER=hamtarowarrior
 
@@ -37,7 +37,7 @@ HIST_STAMPS="dd.mm.yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(git sudo pip archlinux docker docker-compose colored-man-pages)
+plugins=(git sudo pip docker docker-compose colored-man-pages)
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -51,4 +51,4 @@ source ~/.profile
 
 # Load Syntax HighLighting
 syntax_plugin="${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-[[ -f "$syntax_plugin" ]] && source $syntax_plugin
+[ -f "$syntax_plugin" ] && source $syntax_plugin
